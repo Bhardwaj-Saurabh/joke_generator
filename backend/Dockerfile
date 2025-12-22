@@ -14,7 +14,7 @@ COPY pyproject.toml .
 RUN uv venv
 RUN uv sync --frozen || uv sync
 
-# Copy application code
+# Copy application code and dependencies
 COPY . .
 
 # Expose port
