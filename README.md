@@ -14,7 +14,6 @@ A high-performance, microservices-based AI application that generates jokes usin
 -   **Kubernetes Ready**: Full K8s manifests included in `kubernetes/`.
 
 ## 🛠️ Quick Start
-
 ### Prerequisites
 - Docker & Docker Compose
 
