@@ -4,74 +4,57 @@ on:
   push:
     branches: [ "master" ]
 
-# Use the repository secret for the Docker Hub username so builds/tags can reference it consistently.
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
-  # 1. Run Unit Tests
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        # Verify 'uv' is the intended installer/CLI. If not, replace with:
-        # pip install -r backend/requirements.txt
-        pip install uv
-        cd backend
-        uv sync
-        
-    - name: Run Tests
-      # We skip end-to-end tests in CI as they require a running environment
-      # We rely on unit tests here
-      # We provide dummy keys because Setting validation runs at import time
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
-      run: |
-        cd backend
-        # Verify this invocation is correct for your test runner
-        uv run pytest tests/test_main.py
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-  # 2. Build & Push to Docker Hub
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+          cd backend
+          uv sync
+
+      - name: Run Tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
+        run: |
+          cd backend
+          uv run pytest tests/test_main.py
+
   build-and-push:
     needs: test
     runs-on: ubuntu-latest
-    # If you use a GitHub Environment (to get environment-scoped secrets/policies),
-    # uncomment and set the environment name here:
-    # environment: production
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Debug Secrets
-      run: |
-        if [[ -z "${{ secrets.DOCKER_USERNAME }}" ]]; then echo "::error::DOCKER_USERNAME secret is missing or empty"; else echo "DOCKER_USERNAME secret is set"; fi
-        if [[ -z "${{ secrets.DOCKER_PASSWORD }}" ]]; then echo "::error::DOCKER_PASSWORD secret is missing or empty"; else echo "DOCKER_PASSWORD secret is set"; fi
-    
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    
-    - name: Build & Push Backend
-      run: |
-        docker build -t ${{ env.DOCKER_USERNAME }}/joke-backend:${{ github.sha }} ./backend
-        docker push ${{ env.DOCKER_USERNAME }}/joke-backend:${{ github.sha }}
-        docker tag ${{ env.DOCKER_USERNAME }}/joke-backend:${{ github.sha }} ${{ env.DOCKER_USERNAME }}/joke-backend:latest
-        docker push ${{ env.DOCKER_USERNAME }}/joke-backend:latest
+      - uses: actions/checkout@v3
 
-    - name: Build & Push Frontend
-      run: |
-        docker build -t ${{ env.DOCKER_USERNAME }}/joke-frontend:${{ github.sha }} ./frontend
-        docker push ${{ env.DOCKER_USERNAME }}/joke-frontend:${{ github.sha }}
-        docker tag ${{ env.DOCKER_USERNAME }}/joke-frontend:${{ github.sha }} ${{ env.DOCKER_USERNAME }}/joke-frontend:latest
-        docker push ${{ env.DOCKER_USERNAME }}/joke-frontend:latest
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build & Push Backend
+        run: |
+          docker build -t $DOCKER_USERNAME/joke-backend:${{ github.sha }} ./backend
+          docker push $DOCKER_USERNAME/joke-backend:${{ github.sha }}
+          docker tag $DOCKER_USERNAME/joke-backend:${{ github.sha }} $DOCKER_USERNAME/joke-backend:latest
+          docker push $DOCKER_USERNAME/joke-backend:latest
+
+      - name: Build & Push Frontend
+        run: |
+          docker build -t $DOCKER_USERNAME/joke-frontend:${{ github.sha }} ./frontend
+          docker push $DOCKER_USERNAME/joke-frontend:${{ github.sha }}
+          docker tag $DOCKER_USERNAME/joke-frontend:${{ github.sha }} $DOCKER_USERNAME/joke-frontend:latest
+          docker push $DOCKER_USERNAME/joke-frontend:latest
