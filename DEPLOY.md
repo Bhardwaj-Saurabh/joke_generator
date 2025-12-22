@@ -14,6 +14,7 @@ This guide explains how to deploy the **Joke Creator** application to **Azure Ku
 
 Login to Azure:
 ```bash
+
 az login
 ```
 

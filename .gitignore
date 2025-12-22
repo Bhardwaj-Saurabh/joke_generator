@@ -17,3 +17,8 @@ postgres_data/
 
 # Misc
 *.log
+
+# files 
+LOCAL_DEPLOYMENT_PLAN.md
+DEPLOY.md
+LOCAL_OPS.md
