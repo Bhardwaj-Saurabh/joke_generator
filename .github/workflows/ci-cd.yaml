@@ -31,6 +31,10 @@ jobs:
     - name: Run Tests
       # We skip end-to-end tests in CI as they require a running environment
       # We rely on unit tests here
+      # We provide dummy keys because Setting validation runs at import time
+      env:
+        OPENAI_API_KEY: "dummy-key-for-ci"
+        OPIK_API_KEY: "dummy-key-for-ci"
       run: |
         cd backend
         uv run pytest tests/test_main.py
