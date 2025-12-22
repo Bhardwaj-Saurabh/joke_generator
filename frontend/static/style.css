@@ -1,0 +1,112 @@
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #f3f4f6;
+    --card-bg: #ffffff;
+    --text: #1f2937;
+    --text-muted: #6b7280;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+p { color: var(--text-muted); margin: 0; }
+
+.card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.form-group { margin-bottom: 1.5rem; }
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box; /* Fixes padding width issue */
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button:hover { background: var(--primary-hover); }
+
+.hidden { display: none; }
+
+.joke-content { text-align: center; }
+#jokeSetup { font-size: 1.25rem; font-weight: normal; margin-bottom: 1rem; }
+#jokePunchline { font-size: 1.5rem; color: var(--primary); margin-top: 0; }
+.explanation { font-size: 0.875rem; color: var(--text-muted); font-style: italic; margin-top: 1.5rem; border-top: 1px solid #e5e7eb; padding-top: 1rem;}
+
+.loader {
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top: 3px solid white;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: none; /* Hidden by default */
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+button.loading .loader { display: block; }
+button.loading #btnText { display: none; }
+
+.secondary-btn {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+.secondary-btn:hover { background: #f9fafb; color: var(--text); }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Joke Creator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Joke Creator</h1>
+            <p>Generate production-grade humor instantly.</p>
+        </header>
+
+        <main>
+            <div class="card input-section">
+                <form id="jokeForm">
+                    <div class="form-group">
+                        <label for="topic">Topic</label>
+                        <input type="text" id="topic" placeholder="e.g., Programming, Cats, Pizza" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tone">Tone</label>
+                        <select id="tone">
+                            <option value="witty">Witty</option>
+                            <option value="sarcastic">Sarcastic</option>
+                            <option value="dad-joke">Dad Joke</option>
+                            <option value="dark">Dark Humor</option>
+                            <option value="silly">Silly</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="generateBtn">
+                        <span id="btnText">Generate Joke</span>
+                        <div class="loader" id="loader"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div id="resultSection" class="card result-section hidden">
+                <div class="joke-content">
+                    <h3 id="jokeSetup"></h3>
+                    <h2 id="jokePunchline"></h2>
+                    <p id="jokeExplanation" class="explanation"></p>
+                </div>
+                <div class="actions">
+                    <button onclick="copyToClipboard()" class="secondary-btn">Copy</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
