@@ -1,0 +1,66 @@
+name: Production CI/CD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  ACR_NAME: ${{ secrets.ACR_NAME }}
+  REGISTRY_LOGIN_SERVER: ${{ secrets.ACR_NAME }}.azurecr.io
+
+jobs:
+  # 1. Run Unit Tests
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install uv
+        cd backend
+        uv sync
+        
+    - name: Run Tests
+      # We skip end-to-end tests in CI as they require a running environment
+      # We rely on unit tests here
+      run: |
+        cd backend
+        uv run pytest tests/test_main.py
+
+  # 2. Build & Push to ACR
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Login to ACR
+      run: |
+        az acr login --name ${{ env.ACR_NAME }}
+    
+    - name: Build & Push Backend
+      run: |
+        docker build -t ${{ env.REGISTRY_LOGIN_SERVER }}/joke-backend:${{ github.sha }} ./backend
+        docker push ${{ env.REGISTRY_LOGIN_SERVER }}/joke-backend:${{ github.sha }}
+        docker tag ${{ env.REGISTRY_LOGIN_SERVER }}/joke-backend:${{ github.sha }} ${{ env.REGISTRY_LOGIN_SERVER }}/joke-backend:latest
+        docker push ${{ env.REGISTRY_LOGIN_SERVER }}/joke-backend:latest
+
+    - name: Build & Push Frontend
+      run: |
+        docker build -t ${{ env.REGISTRY_LOGIN_SERVER }}/joke-frontend:${{ github.sha }} ./frontend
+        docker push ${{ env.REGISTRY_LOGIN_SERVER }}/joke-frontend:${{ github.sha }}
+        docker tag ${{ env.REGISTRY_LOGIN_SERVER }}/joke-frontend:${{ github.sha }} ${{ env.REGISTRY_LOGIN_SERVER }}/joke-frontend:latest
+        docker push ${{ env.REGISTRY_LOGIN_SERVER }}/joke-frontend:latest
