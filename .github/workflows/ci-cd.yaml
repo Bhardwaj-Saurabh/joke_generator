@@ -32,8 +32,8 @@ jobs:
       # We rely on unit tests here
       # We provide dummy keys because Setting validation runs at import time
       env:
-        OPENAI_API_KEY: "dummy-key-for-ci"
-        OPIK_API_KEY: "dummy-key-for-ci"
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
       run: |
         cd backend
         uv run pytest tests/test_main.py
