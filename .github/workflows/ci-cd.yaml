@@ -3,8 +3,6 @@ name: Production CI/CD
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 # Use the repository secret for the Docker Hub username so builds/tags can reference it consistently.
 env:
