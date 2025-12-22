@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 env:
-  DOCKER_USER: "aryansaurabhbhardwaj"
+  DOCKER_USERNAME: "aryansaurabhbhardwaj"
 
 jobs:
   # 1. Run Unit Tests
