@@ -1,0 +1,39 @@
+# Default values for joke-creator.
+
+backend:
+  replicaCount: 1
+  image:
+    repository: host.minikube.internal:5000/joke-backend
+    pullPolicy: Always
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8000
+  env:
+    openaiModel: "gpt-4o-mini"
+    maxTokens: 200
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: host.minikube.internal:5000/joke-frontend
+    pullPolicy: Always
+    tag: "latest"
+  service:
+    type: LoadBalancer
+    port: 80
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+  storage: 1Gi
+  auth:
+    username: user
+    password: password
+    database: joke_db
+
+secrets:
+  openaiApiKey: "replace-me"
+  opikApiKey: "replace-me"
