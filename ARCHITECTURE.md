@@ -40,19 +40,19 @@ graph TD
 *   **Role**: Serves the user interface and proxies API requests.
 *   **Tech Stack**: Nginx (Alpine Linux), Vanilla HTML/CSS/JS.
 *   **Key Files**:
-    *   `static/index.html`: The UI structure.
-    *   `static/style.css`: Modern, responsive styling.
-    *   `Dockerfile`: Configures Nginx to serve static files.
+    *   [static/index.html](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/static/index.html): The UI structure.
+    *   [static/style.css](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/static/style.css): Modern, responsive styling.
+    *   [Dockerfile](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/backend/Dockerfile): Configures Nginx to serve static files.
 *   **Port**: Mapped to host `3000` (internal `80`).
 
 ### B. Backend Service (`/backend`)
 *   **Role**: Handles business logic, AI orchestration, and data persistence.
 *   **Tech Stack**: Python 3.11, FastAPI, Pydantic, SQLModel, AsyncPG.
 *   **Key Components**:
-    *   **API Layer (`main.py`)**: Defines endpoints, rate limiting (5 req/min), and logging middleware.
-    *   **Service Layer (`services/joke_generator.py`)**: Manages OpenAI calls, Opik tracing, and safety guardrails.
-    *   **Data Models (`models.py`)**: Strict Pydantic input/output schemas.
-    *   **Database (`db.py`)**: Async SQLAlchemy engine management.
+    *   **API Layer ([main.py](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/main.py))**: Defines endpoints, rate limiting (5 req/min), and logging middleware.
+    *   **Service Layer ([services/joke_generator.py](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/app/services/joke_generator.py))**: Manages OpenAI calls, Opik tracing, and safety guardrails.
+    *   **Data Models ([models.py](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/app/models.py))**: Strict Pydantic input/output schemas.
+    *   **Database ([db.py](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/backend/app/db.py))**: Async SQLAlchemy engine management.
     *   **Tests (`tests/`)**: Pytest suite covering unit logic and mocking external calls.
 *   **Port**: Mapped to host `8000`.
 
@@ -61,7 +61,7 @@ graph TD
 *   **Tech Stack**: PostgreSQL 16 (Alpine).
 *   **Schema**:
     *   Table: `joke_logs`
-    *   Fields: `id`, `topic`, `tone`, `setup`, `punchline`, `is_safe`, `created_at`.
+    *   Fields: [id](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/backend/app/services/joke_generator.py#74-99), `topic`, `tone`, `setup`, `punchline`, `is_safe`, `created_at`.
 *   **Data Volume**: Persisted to `postgres_data` volume.
 
 ---
@@ -76,7 +76,7 @@ graph TD
 This builds all services and starts the environment.
 
 1.  **Configure Environment**:
-    Ensure you have a `.env` file in the `backend/` directory with:
+    Ensure you have a [.env](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/.env) file in the `backend/` directory with:
     ```ini
     OPENAI_API_KEY=your_key_here
     OPIK_API_KEY=your_key_here
@@ -136,7 +136,7 @@ uv run python scripts/evaluate.py
 ---
 
 ## 5. Security & Production Considerations
-*   **Secrets**: Managed via `.env` and `pydantic-settings`; never hardcoded.
+*   **Secrets**: Managed via [.env](file:///Users/saurabhbhardwaj/Documents/genaiproduction/joke-creator-py/.env) and `pydantic-settings`; never hardcoded.
 *   **Rate Limiting**: `slowapi` protects the API from abuse.
 *   **Type Safety**: 100% type coverage ensures reliability.
 *   **Structure**: Separation of concerns allows teams to scale independently (Frontend team vs Backend AI team).
