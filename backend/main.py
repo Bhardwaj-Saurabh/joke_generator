@@ -7,6 +7,7 @@ from app.db import init_db
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from contextlib import asynccontextmanager
 
@@ -29,6 +30,9 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Add Logging Middleware
 app.add_middleware(LoggingMiddleware)
+
+# Prometheus Instrumentation
+Instrumentator().instrument(app).expose(app)
 
 # Initialize Service
 joke_service = JokeGeneratorService()
