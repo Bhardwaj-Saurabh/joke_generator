@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends, Query
 from fastapi.responses import FileResponse
-from app.models import JokeRequest, JokeResponse
+from app.models import JokeRequest, JokeResponse, JokeLog
+from app.db import get_session
 from app.services.joke_generator import JokeGeneratorService
 from app.logging_conf import LoggingMiddleware, logger
 from app.db import init_db
@@ -61,6 +62,45 @@ async def generate_joke(request: Request, joke_request: JokeRequest):
         logger.error(f"Generation failed: {e}")
         # In production, we'd log this error securely
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/history")
+async def get_joke_history(
+    topic: str = Query(None, description="Filter by topic"),
+    limit: int = Query(50, le=100, description="Max number of jokes to return"),
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Retrieve previously generated jokes from the database.
+    Optionally filter by topic.
+    """
+    from sqlmodel import select
+    
+    query = select(JokeLog).order_by(JokeLog.created_at.desc())
+    
+    if topic:
+        query = query.where(JokeLog.topic == topic)
+    
+    query = query.limit(limit)
+    
+    result = await session.execute(query)
+    jokes = result.scalars().all()
+    
+    return {
+        "total": len(jokes),
+        "jokes": [
+            {
+                "id": str(joke.id),
+                "topic": joke.topic,
+                "setup": joke.setup,
+                "punchline": joke.punchline,
+                "tone": joke.tone,
+                "is_safe": joke.is_safe,
+                "latency_ms": joke.latency_ms,
+                "created_at": joke.created_at.isoformat() if joke.created_at else None
+            }
+            for joke in jokes
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn
