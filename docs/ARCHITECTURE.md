@@ -12,8 +12,8 @@ graph TD
     User([End User]) -->|HTTP/Browser| Ingress[Ingress / LoadBalancer]
     
     subgraph "Kubernetes Cluster"
-        Ingress -->|Route /| Frontend[Frontend Service (Nginx)]
-        Ingress -->|Route /api| Backend[Backend Service (FastAPI)]
+        Ingress -->|Route /| Frontend["Frontend Service (Nginx)"]
+        Ingress -->|Route /api| Backend["Backend Service (FastAPI)"]
         
         Backend -->|Persist Data| DB[(PostgreSQL 16)]
         
@@ -24,9 +24,9 @@ graph TD
     end
     
     subgraph "External Cloud"
-        Backend -->|LLM Generation| OpenAI([OpenAI API])
-        Backend -->|Tracing & Eval| Opik([Opik Platform])
-        CI[GitHub Actions] -->|Push Images| DockerHub((Docker Hub))
+        Backend -->|LLM Generation| OpenAI["OpenAI API"]
+        Backend -->|Tracing & Eval| Opik["Opik Platform"]
+        CI["GitHub Actions"] -->|Push Images| DockerHub[(Docker Hub)]
     end
 ```
 
