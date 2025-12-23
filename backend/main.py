@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends, Query
 from fastapi.responses import FileResponse
 from app.models import JokeRequest, JokeResponse, JokeLog
 from app.db import get_session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.joke_generator import JokeGeneratorService
 from app.logging_conf import LoggingMiddleware, logger
 from app.db import init_db
